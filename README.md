@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cosmo AI Sheets - Excel Clone
+
+A high-performance Excel clone built with Next.js, featuring a virtualized grid with formula support.
+
+## Features
+
+- 🚀 High-performance virtualized grid (10,000 x 10,000 cells)
+- 📝 Cell editing with formula support
+- ➕ Basic mathematical operations between cells
+- 🔄 Real-time formula recalculation
+- ⌨️ Full keyboard navigation support (Arrow keys, Tab, Shift+Tab, Enter)
+- 📋 Copy/paste functionality (Ctrl+C, Ctrl+V)
+- ↩️ Undo/redo support (Ctrl+Z, Ctrl+Shift+Z)
+
+## Supported Formulas
+
+Start any formula with `=` to begin calculation mode. Examples:
+
+### Basic Arithmetic
+
+- `=A1 + B1` - Addition
+- `=A1 - B1` - Subtraction
+- `=A1 * B1` - Multiplication
+- `=A1 / B1` - Division
+- `=A1 ^ 2` - Exponentiation
+- `=(A1 + B1) * C1` - Parentheses for operation order
+
+### Math Functions
+
+- `=sqrt(A1)` - Square root
+- `=abs(A1)` - Absolute value
+- `=round(A1)` - Round to nearest integer
+- `=floor(A1)` - Round down
+- `=ceil(A1)` - Round up
+
+### Examples
+
+```
+=A1 + B1 * C1         // Basic arithmetic
+=sqrt(A1 * 2)         // Function with arithmetic
+=abs(A1 - B1)         // Function with cell reference
+=round((A1 + B1) / 2) // Nested operations
+```
+
+### Error Handling
+
+Formulas will show errors for:
+
+- Circular references (e.g., A1 references B1 which references A1)
+- Invalid formulas (syntax errors)
+- Division by zero
+- Empty cells in formulas are treated as 0 for calculation purposes.
+
+## Tech Stack
+
+- Next.js 14 with App Router
+- TypeScript
+- Math.js for formula parsing
+- Zustand for state management
+- react-window for virtualization
+- Tailwind CSS for styling
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18.17 or later
+- npm 9.x or later
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/Gr8z/cosmo-ai-sheets.git
+   cd cosmo-ai-sheets
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Run the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Structure
+
+```
+src/
+├── app/                 # Next.js app directory
+├── components/          # React components
+├── lib/                # Utility functions
+├── store/              # Zustand store
+├── types/              # TypeScript types
+└── constants/          # Constants and interfaces
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Performance Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Virtualization
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Uses react-window's FixedSizeGrid for efficient cell rendering
+- Only renders cells currently visible in the viewport
+- Maintains smooth scrolling even with 100 million cells
+- Optimized header synchronization with transform-based scrolling
+- Minimal memory footprint with cell recycling
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
