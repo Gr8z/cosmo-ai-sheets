@@ -2,6 +2,10 @@
 
 A high-performance Excel clone built with Next.js, featuring a virtualized grid with formula support.
 
+[![Deploy to GitHub Pages](https://github.com/Gr8z/cosmo-ai-sheets/actions/workflows/deploy.yml/badge.svg)](https://github.com/Gr8z/cosmo-ai-sheets/actions/workflows/deploy.yml)
+
+🔗 [Live Demo](https://gr8z.github.io/cosmo-ai-sheets/)
+
 ## Features
 
 - 🚀 High-performance virtualized grid (10,000 x 10,000 cells)
