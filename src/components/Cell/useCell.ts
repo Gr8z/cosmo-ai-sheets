@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useShallow } from 'zustand/shallow'
 import useGridStore from '@/store/useGridStore'
-import { evaluateFormula } from '@/lib/formulaParser'
 import type { CellValue } from '@/types/grid'
 import type { CellPosition } from './CellProps'
 
@@ -23,24 +22,6 @@ export const useCell = (id: string, position: CellPosition) => {
 
   const isActive =
     activeCell?.row === position.row && activeCell?.col === position.col
-
-  useEffect(() => {
-    if (cell?.formula) {
-      const cellValue = cell.value
-      const result = evaluateFormula(cell.formula, (ref) => {
-        const cell = useGridStore.getState().state.cells.get(ref)
-        return cell?.value ?? null
-      })
-
-      if (result && typeof result === 'object' && 'error' in result) {
-        if (cellValue !== null) {
-          setCellValue(id, null)
-        }
-      } else if (result !== cellValue) {
-        setCellValue(id, result as CellValue)
-      }
-    }
-  }, [cell?.formula, cell?.value, id])
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -86,11 +67,7 @@ export const useCell = (id: string, position: CellPosition) => {
   const commitEdit = () => {
     setIsEditing(false)
     if (editValue.startsWith('=')) {
-      try {
-        setFormula(id, editValue)
-      } catch {
-        setCellValue(id, editValue)
-      }
+      setFormula(id, editValue)
     } else {
       setCellValue(
         id,

@@ -4,6 +4,7 @@ import { formatCellValue } from '@/lib/formulaParser'
 import type { CellProps } from './CellProps'
 import { useCell } from './useCell'
 import classNames from 'classnames'
+import CellErrorDisplay from './CellError'
 
 export const Cell = ({ id, position, style }: CellProps) => {
   const {
@@ -50,15 +51,11 @@ export const Cell = ({ id, position, style }: CellProps) => {
           onKeyDown={handleKeyDown}
           className='w-full h-full border-none p-0 bg-transparent outline-none'
         />
+      ) : cell?.error ? (
+        <CellErrorDisplay error={cell.error} />
       ) : (
-        <span
-          className={classNames('block truncate', {
-            'text-red-500': cell?.error,
-          })}
-        >
-          {cell?.error
-            ? `#ERROR: ${cell.error.message}`
-            : formatCellValue(cell?.value ?? null)}
+        <span className='block truncate'>
+          {formatCellValue(cell?.value ?? null)}
         </span>
       )}
     </div>

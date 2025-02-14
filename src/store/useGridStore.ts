@@ -5,9 +5,9 @@ import type {
   CellData,
   CellPosition,
   GridState,
-  CellFormula,
+  CellValue,
 } from '../types/grid'
-import { evaluateFormula } from '@/lib/formulaParser'
+import { evaluateFormula, parseFormula } from '@/lib/formulaParser'
 import { MAX_UNDO_STACK_SIZE } from '@/constants/grid'
 
 enableMapSet()
@@ -15,7 +15,7 @@ enableMapSet()
 type GridStore = {
   state: GridState
   setActiveCell: (position: CellPosition) => void
-  setCellValue: (id: string, value: string | number | null) => void
+  setCellValue: (id: string, value: CellValue) => void
   setFormula: (id: string, formula: string) => void
   copySelectedCells: () => void
   pasteCopiedCells: (targetCell: CellPosition) => void
@@ -55,10 +55,11 @@ const useGridStore = create<GridStore>()(
         store.state.cells.forEach((cell, cellId) => {
           if (cell.formula?.dependencies.includes(id)) {
             const result = evaluateFormula(cell.formula, (ref) => {
-              return store.state.cells.get(ref)?.value ?? null
+              const cell = store.state.cells.get(ref)
+              return cell?.value ?? null
             })
 
-            if (result && typeof result === 'object' && 'error' in result) {
+            if (result && typeof result === 'object' && 'type' in result) {
               store.state.cells.set(cellId, {
                 ...cell,
                 error: result,
@@ -67,7 +68,7 @@ const useGridStore = create<GridStore>()(
             } else {
               store.state.cells.set(cellId, {
                 ...cell,
-                value: typeof result === 'object' ? null : result,
+                value: result,
                 error: undefined,
               })
             }
@@ -95,21 +96,13 @@ const useGridStore = create<GridStore>()(
 
         try {
           const cell = store.state.cells.get(id) || { id }
-          const formula: CellFormula = {
-            raw: formulaStr,
-            parsed: formulaStr.slice(1), // Remove the '=' prefix
-            dependencies:
-              formulaStr
-                .slice(1)
-                .match(/[A-Z]+\d+/g)
-                ?.filter(Boolean) || [],
-          }
-
+          const formula = parseFormula(formulaStr)
           const result = evaluateFormula(formula, (ref) => {
-            return store.state.cells.get(ref)?.value ?? null
+            const cell = store.state.cells.get(ref)
+            return cell?.value ?? null
           })
 
-          if (result && typeof result === 'object' && 'error' in result) {
+          if (result && typeof result === 'object' && 'type' in result) {
             store.state.cells.set(id, {
               ...cell,
               formula,
@@ -120,10 +113,34 @@ const useGridStore = create<GridStore>()(
             store.state.cells.set(id, {
               ...cell,
               formula,
-              value: typeof result === 'object' ? null : result,
+              value: result,
               error: undefined,
             })
           }
+
+          // Update dependent cells
+          store.state.cells.forEach((cell, cellId) => {
+            if (cell.formula?.dependencies.includes(id)) {
+              const result = evaluateFormula(cell.formula, (ref) => {
+                const cell = store.state.cells.get(ref)
+                return cell?.value ?? null
+              })
+
+              if (result && typeof result === 'object' && 'type' in result) {
+                store.state.cells.set(cellId, {
+                  ...cell,
+                  error: result,
+                  value: null,
+                })
+              } else {
+                store.state.cells.set(cellId, {
+                  ...cell,
+                  value: result,
+                  error: undefined,
+                })
+              }
+            }
+          })
 
           store.state.undoStack.push({
             type: 'SET_FORMULA',
@@ -134,7 +151,16 @@ const useGridStore = create<GridStore>()(
           }
           store.state.redoStack = []
         } catch (error) {
-          console.error('Failed to set formula:', error)
+          const cell = store.state.cells.get(id) || { id }
+          store.state.cells.set(id, {
+            ...cell,
+            error: {
+              type: 'INVALID_FORMULA',
+              message:
+                error instanceof Error ? error.message : 'Invalid formula',
+            },
+            value: null,
+          })
         }
       }),
 
