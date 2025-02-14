@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useShallow } from 'zustand/shallow'
 import useGridStore from '@/store/useGridStore'
-import type { CellValue } from '@/types/grid'
 import type { CellPosition } from './CellProps'
 
 export const useCell = (id: string, position: CellPosition) => {
