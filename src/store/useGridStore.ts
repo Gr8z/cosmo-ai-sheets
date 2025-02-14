@@ -8,10 +8,9 @@ import type {
   CellFormula,
 } from '../types/grid'
 import { evaluateFormula } from '@/lib/formulaParser'
+import { MAX_UNDO_STACK_SIZE } from '@/constants/grid'
 
 enableMapSet()
-
-const MAX_UNDO_STACK_SIZE = 100
 
 type GridStore = {
   state: GridState

@@ -57,7 +57,7 @@ Formulas will show errors for:
 
 ## Tech Stack
 
-- Next.js 14 with App Router
+- Next.js 15 with App Router
 - TypeScript
 - Math.js for formula parsing
 - Zustand for state management
@@ -68,7 +68,7 @@ Formulas will show errors for:
 
 ### Prerequisites
 
-- Node.js 18.17 or later
+- Node.js 20.x or later
 - npm 9.x or later
 
 ### Installation

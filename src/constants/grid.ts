@@ -12,6 +12,9 @@ export const SCROLLBAR_WIDTH = 17
 // Virtualization settings
 export const OVERSCAN_COUNT = 2
 
+// Undo/redo settings
+export const MAX_UNDO_STACK_SIZE = 100
+
 // Cell styles
 export const DEFAULT_CELL_STYLE: CSSProperties = {
   padding: '4px 8px',
