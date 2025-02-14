@@ -1,5 +1,3 @@
-import type { CSSProperties } from 'react'
-
 // Grid dimensions
 export const GRID_DIMENSIONS = { rows: 10000, cols: 10000 }
 
@@ -14,13 +12,3 @@ export const OVERSCAN_COUNT = 2
 
 // Undo/redo settings
 export const MAX_UNDO_STACK_SIZE = 100
-
-// Cell styles
-export const DEFAULT_CELL_STYLE: CSSProperties = {
-  padding: '4px 8px',
-  border: '1px solid #e2e8f0',
-  backgroundColor: 'white',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-}

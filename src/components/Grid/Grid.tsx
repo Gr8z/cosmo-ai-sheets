@@ -40,36 +40,35 @@ export const Grid = () => {
       tabIndex={0}
     >
       {/* Column Headers */}
-      <div className='flex h-[30px]'>
+      <div className='flex' style={{ height: ROW_HEIGHT }}>
+        {/* Top-left corner */}
         <div
-          className='border-r border-b border-gray-200 flex-shrink-0 bg-gray-50'
+          className='border border-slate-200 flex-shrink-0 bg-gray-50'
           style={{ width: HEADER_WIDTH }}
         />
+        {/* Column headers container */}
         <div
-          className='overflow-hidden'
+          className='overflow-hidden relative'
           style={{
             width: `calc(100% - ${HEADER_WIDTH}px)`,
-            height: ROW_HEIGHT,
             marginRight: SCROLLBAR_WIDTH,
           }}
         >
           <div
             ref={columnHeaderRef}
-            className='flex'
+            className='flex absolute top-0 left-0 will-change-transform'
             style={{
               width: GRID_DIMENSIONS.cols * COLUMN_WIDTH,
-              height: '100%',
-              willChange: 'transform',
+              height: ROW_HEIGHT,
             }}
           >
             {Array.from({ length: GRID_DIMENSIONS.cols }, (_, index) => (
               <div
                 key={`col-${index}`}
-                className='flex-shrink-0 border-r border-b border-t border-gray-200 bg-gray-50 flex items-center justify-center select-none'
+                className='border-r border-t border-b border-slate-200 bg-gray-50 flex items-center justify-center'
                 style={{
                   width: COLUMN_WIDTH,
                   height: '100%',
-                  borderLeftWidth: index === 0 ? '1px' : '0',
                 }}
               >
                 {getColumnLabel(index)}
@@ -83,24 +82,24 @@ export const Grid = () => {
       <div className='flex flex-1 overflow-hidden'>
         {/* Row Headers */}
         <div
-          className='flex-shrink-0 overflow-hidden'
-          style={{ width: HEADER_WIDTH, marginBottom: SCROLLBAR_WIDTH }}
+          className='flex-shrink-0 overflow-hidden relative'
+          style={{ width: HEADER_WIDTH }}
         >
           <div
             ref={rowHeaderRef}
+            className='absolute top-0 left-0 will-change-transform'
             style={{
               height: GRID_DIMENSIONS.rows * ROW_HEIGHT,
-              willChange: 'transform',
+              width: HEADER_WIDTH,
             }}
           >
             {Array.from({ length: GRID_DIMENSIONS.rows }, (_, index) => (
               <div
                 key={`row-${index}`}
-                className='border-b border-r border-gray-200 bg-gray-50 flex items-center justify-center select-none'
+                className='border-b border-r border-l border-slate-200 bg-gray-50 flex items-center justify-center'
                 style={{
                   height: ROW_HEIGHT,
-                  borderLeftWidth: '1px',
-                  borderTopWidth: index === 0 ? '1px' : '0',
+                  width: '100%',
                 }}
               >
                 {index + 1}
@@ -128,12 +127,7 @@ export const Grid = () => {
                 key={`${rowIndex}-${columnIndex}`}
                 id={renderCell(rowIndex, columnIndex).id}
                 position={{ row: rowIndex, col: columnIndex }}
-                style={{
-                  ...style,
-                  width: COLUMN_WIDTH,
-                  borderTopWidth: rowIndex === 0 ? '1px' : '0',
-                  borderLeftWidth: columnIndex === 0 ? '1px' : '0',
-                }}
+                style={style}
               />
             )}
           </FixedSizeGrid>

@@ -1,9 +1,9 @@
 'use client'
 
 import { formatCellValue } from '@/lib/formulaParser'
-import { DEFAULT_CELL_STYLE } from '@/constants/grid'
 import type { CellProps } from './CellProps'
 import { useCell } from './useCell'
+import classNames from 'classnames'
 
 export const Cell = ({ id, position, style }: CellProps) => {
   const {
@@ -19,17 +19,20 @@ export const Cell = ({ id, position, style }: CellProps) => {
     setEditValue,
   } = useCell(id, position)
 
-  const cellStyle: React.CSSProperties = {
-    ...DEFAULT_CELL_STYLE,
-    ...style,
-    backgroundColor: isActive ? '#e5e7eb' : 'white',
-    boxShadow: isActive ? '0 0 0 2px #3b82f6' : 'none',
-    zIndex: isActive ? 1 : 'auto',
-  }
-
   return (
     <div
-      style={cellStyle}
+      className={classNames(
+        'border-r border-b border-slate-200 bg-white overflow-hidden',
+        'absolute top-0 left-0',
+        {
+          'bg-gray-200': isActive,
+          'ring-2 ring-blue-500 z-10': isActive,
+        }
+      )}
+      style={{
+        ...style,
+        padding: '4px 8px',
+      }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       role='gridcell'
@@ -45,17 +48,14 @@ export const Cell = ({ id, position, style }: CellProps) => {
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
-          style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
-            padding: 0,
-            background: 'transparent',
-            outline: 'none',
-          }}
+          className='w-full h-full border-none p-0 bg-transparent outline-none'
         />
       ) : (
-        <span style={{ color: cell?.error ? 'red' : 'inherit' }}>
+        <span
+          className={classNames('block truncate', {
+            'text-red-500': cell?.error,
+          })}
+        >
           {cell?.error
             ? `#ERROR: ${cell.error.message}`
             : formatCellValue(cell?.value ?? null)}

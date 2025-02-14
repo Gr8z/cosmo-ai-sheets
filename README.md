@@ -57,7 +57,7 @@ Formulas will show errors for:
 
 ## Tech Stack
 
-- Next.js 15 with App Router
+- Next.js 15
 - TypeScript
 - Math.js for formula parsing
 - Zustand for state management
